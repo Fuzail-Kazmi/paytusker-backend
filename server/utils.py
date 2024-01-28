@@ -2,12 +2,12 @@ from django.db import connection
 from django.utils import timezone
 import uuid
 import random
-from apps.store.models.customer import Customer
-from apps.store.models.product import Category, Product, ProductImages
 import json
 import os
 from snowflake import SnowflakeGenerator
 
+from apps.store.models.customer import Customer
+from apps.store.models.product import Category, Product, ProductImages
 
 def exceute_sql_query(query: str, serialized=True):
     with connection.cursor() as cursor:
