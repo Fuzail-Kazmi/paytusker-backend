@@ -7,7 +7,7 @@ from rest_framework_simplejwt.views import (
 )
 
 from .api.register import RegisterUser
-
+from .api.user import UserApi
 
 
 def index(request):
@@ -15,9 +15,14 @@ def index(request):
 
 
 urlpatterns = [
-    path('register/', RegisterUser.as_view(), name='register_user'),
+    path("register/", RegisterUser.as_view(), name="register_user"),
+    path("get-user-details/", UserApi.as_view({"get": "get_user_details"}), name="register_user"),
+    path("get-user-address/", UserApi.as_view({"get": "get_user_address"}), name="register_user"),
 
-    path('auth-token/', views.AccountsTokenObtainPairView.as_view(),
-         name='token_obtain_pair'),
-    path('auth-token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path(
+        "auth-token/",
+        views.AccountsTokenObtainPairView.as_view(),
+        name="token_obtain_pair",
+    ),
+    path("auth-token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 ]

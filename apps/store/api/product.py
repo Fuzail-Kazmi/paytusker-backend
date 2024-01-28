@@ -30,7 +30,19 @@ class ProductDetail(APIView):
 
             if product_category:
                 data["category"] = product_category
+            from server.utils import exceute_sql_query
 
+            reviews_query = f""" SELECT r.* , c.customer_name, c.user_id FROM store_orderreview r
+              INNER JOIN store_customer c on r.customer_id = c.id"""
+            print(Product._meta.get_fields())
+            reviews = exceute_sql_query(reviews_query)
+            from apps.accounts.models import User
+
+            for r in reviews:
+                r_user = User.objects.get(id=r.get("user_id"))
+                r["customer_image"] = r_user.image.url
+
+            data["reviews"] = reviews
         return Response(status=200, data=data)
 
 

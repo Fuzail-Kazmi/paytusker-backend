@@ -49,11 +49,8 @@ class CartItem(BaseModel):
         self.rate = self.item.price
         self.amount = self.qty * self.rate
         return super().save(*args, **kwargs)
-    
 
 
 @receiver(post_save, sender=CartItem)
 def update_cart(sender, instance, created, *args, **kwargs):
     instance.cart.save()
-
-

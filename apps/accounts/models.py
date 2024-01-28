@@ -9,8 +9,7 @@ class UserManager(BaseUserManager):
             raise ValueError("The Email field must be set")
 
         email = self.normalize_email(email)
-        user = self.model(
-            email=email, phone_number=phone_number, **extra_fields)
+        user = self.model(email=email, phone_number=phone_number, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -18,7 +17,7 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, phone_number=None, password=None, **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
-        extra_fields.setdefault('is_active', True)
+        extra_fields.setdefault("is_active", True)
 
         if extra_fields.get("is_staff") is not True:
             raise ValueError("Superuser must have is_staff=True.")
@@ -30,12 +29,16 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    id = models.UUIDField(default=uuid4, primary_key=True,
-                          editable=False, unique=True, )
+    id = models.UUIDField(
+        default=uuid4,
+        primary_key=True,
+        editable=False,
+        unique=True,
+    )
+    image = models.ImageField(null=True, upload_to="images", blank=True)
     username = models.CharField(max_length=50, unique=True, null=False)
     email = models.EmailField(unique=True)
-    phone_number = models.CharField(
-        max_length=50, unique=True, null=True, blank=True)
+    phone_number = models.CharField(max_length=50, unique=True, null=True, blank=True)
     verified = models.BooleanField(default=False)
 
     objects = UserManager()
@@ -60,5 +63,3 @@ class Address(models.Model):
     address_line_2 = models.CharField(max_length=200, null=True)
     post_code = models.CharField(max_length=200, null=True)
     street_no = models.CharField(max_length=200, null=True)
-
-
