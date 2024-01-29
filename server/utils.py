@@ -9,6 +9,7 @@ from snowflake import SnowflakeGenerator
 from apps.store.models.customer import Customer
 from apps.store.models.product import Category, Product, ProductImages
 
+
 def exceute_sql_query(query: str, serialized=True):
     with connection.cursor() as cursor:
         cursor.execute(query)
@@ -64,6 +65,10 @@ def update_products():
 
 
 ID_GEN = SnowflakeGenerator(42)
+
+
+
+
 
 
 def generate_snf_id():
