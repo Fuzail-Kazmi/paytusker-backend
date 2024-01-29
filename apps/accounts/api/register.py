@@ -3,20 +3,41 @@ from apps.accounts.models import User
 from django.core.validators import validate_email
 from django.http import HttpResponseBadRequest
 from rest_framework.response import Response
+from rest_framework import status
 
 
 class RegisterUser(APIView):
     def post(self, request):
-        user_object = request.data
-        # user_object = self.validate_user_object(user_object)
+        user_object: dict = request.data
 
-        user = User.objects.create(
+        required_fields = [
+            "first_name",
+            "last_name",
+            "username",
+            "email",
+            "phone",
+            "password",
+        ]
+
+        for field in user_object:
+            if field not in required_fields:
+                return Response(
+                    f"{str(field)} is missing.", status=status.HTTP_403_FORBIDDEN
+                )
+
+        email_exists = User.objects.filter(email=user_object.get("email")).first()
+        if email_exists:
+            return Response(
+                f"The email is already in use.", status=status.HTTP_403_FORBIDDEN
+            )
+
+        user = User.objects.create_user(
             first_name=user_object.get("first_name"),
             last_name=user_object.get("last_name"),
             username=user_object.get("username"),
-            password=user_object.get("password"),
             email=user_object.get("email"),
-            phone_number=user_object.get("phone_number"),
+            phone_number=user_object.get("phone"),
+            password=user_object.get("password"),
         )
 
         user.save()
@@ -29,19 +50,6 @@ class RegisterUser(APIView):
         return Response({"message": "user registered"}, status=200)
 
     def validate_user_object(self, user_object: dict):
-        required_fields = [
-            "first_name",
-            "last_name",
-            "username",
-            "phone_number",
-            "email",
-            "password",
-        ]
-
-        for key in user_object.items():
-            if key not in required_fields:
-                raise Exception(f"{key} is missing")
-
         if not self.validate_email(user_object.get("email")):
             raise Exception("email is not vaild")
 
