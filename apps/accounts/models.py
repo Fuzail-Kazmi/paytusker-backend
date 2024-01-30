@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from uuid import uuid4
+from django.contrib.auth.hashers import make_password
 
 
 class UserManager(BaseUserManager):
@@ -10,7 +11,8 @@ class UserManager(BaseUserManager):
 
         email = self.normalize_email(email)
         user = self.model(email=email, phone_number=phone_number, **extra_fields)
-        user.set_password(password)
+        password = make_password(password)
+        user.password = password
         user.save(using=self._db)
         return user
 
@@ -36,7 +38,7 @@ class User(AbstractUser):
         unique=True,
     )
     image = models.ImageField(null=True, upload_to="images", blank=True)
-    username = models.CharField(max_length=50, unique=True, null=False)
+    username = models.CharField(max_length=50, unique=False, null=False)
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=50, unique=True, null=True, blank=True)
     verified = models.BooleanField(default=False)

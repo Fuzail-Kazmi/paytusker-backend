@@ -46,6 +46,7 @@ class CartApi(ViewSet):
 
     def get_cart_detail(self, request):
         user = request.user
+        print(user)
         response_obj = {}
         customer = get_customer(user)
         cart = Cart.objects.filter(customer=customer).first()
