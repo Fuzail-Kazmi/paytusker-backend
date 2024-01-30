@@ -51,10 +51,7 @@ class RegisterUser(APIView):
 
     def validate_user_object(self, user_object: dict):
         if not self.validate_email(user_object.get("email")):
-            raise Exception("email is not vaild")
-
-        if len(user_object.get("phone")) < 8:
-            raise Exception("Password is to short")
+            return Response(data="email is not vaild")
 
         return user_object
 
@@ -64,6 +61,6 @@ class RegisterUser(APIView):
         user = User.objects.filter(email=email)
 
         if user:
-            raise Exception("email already taken")
+            return True
 
-        return True
+        return False
