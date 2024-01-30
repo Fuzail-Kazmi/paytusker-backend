@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from uuid import uuid4
+from django.contrib.auth.hashers import make_password
 
 
 class UserManager(BaseUserManager):
@@ -10,10 +11,9 @@ class UserManager(BaseUserManager):
 
         email = self.normalize_email(email)
         user = self.model(email=email, phone_number=phone_number, **extra_fields)
-        print(password)
-        # user.set_password(password)
+        password = make_password(password)
+        user.password = password
         user.save(using=self._db)
-
         return user
 
     def create_superuser(self, email, phone_number=None, password=None, **extra_fields):

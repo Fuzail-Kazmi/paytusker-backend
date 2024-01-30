@@ -12,7 +12,7 @@ class Customer(BaseModel):
     customer_name = models.CharField(max_length=999)
 
     def __str__(self) -> str:
-        return self.customer_name
+        return self.user.username
 
 
 class Cart(BaseModel):
@@ -25,7 +25,7 @@ class Cart(BaseModel):
     )
 
     def __str__(self) -> str:
-        return self.customer.customer_name
+        return self.customer.user.username
 
     def save(self, *args, **kwargs) -> None:
         self.total_amount = sum([item.amount for item in self.cartitem_set.all()])
